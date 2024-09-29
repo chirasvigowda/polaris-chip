@@ -17,6 +17,7 @@ export class MyCard extends LitElement {
     this.title = "Taylor Swift";
     this.image = "";
     this.description = "Taylor Swift is a singer as well as a songwriter who produced her first album in 2006. Since then she has produced 11 albums, and her album called 1989, released in 2014, is her best-selling album to date. Her most recent tour, the Eras Tour, has not only held concerts in the US but internationally as well. This tour has generated over 1 billion dollars in revenue, making it the highest-grossing concert tour of all time.";
+    this.fancy = false; 
 
   }
 
@@ -27,8 +28,15 @@ export class MyCard extends LitElement {
         display: block;
         margin: 0 auto;
       }
+      :host([fancy]) {
+      display: block;
+        background-color:  #FFFFE0;
+        border: 2px #F6BE00;
+        box-shadow: 10px 5px 5px grey;
+}
       .card {
-        width: 350px; 
+        width: 350px;
+        height: 700px;
         padding: 8px; 
         background-color: lavender; 
         margin: 8px; 
@@ -59,19 +67,37 @@ export class MyCard extends LitElement {
   render() {
     return html`
       
-      <div class = "card">
-        <h2 class = "title">${this.title}</h2>
-        <img src = "${this.image}" class="image1" alt="$this.title}"/>
-        <p class = "description">${this.description}</p>
+      <div class="card">
+        <h2 class="title">${this.title}</h2>
+        <img src="${this.image}" class="image1" alt="$this.title}"/>
+        <p class="description">${this.description}</p>
+        <details ?open="${this.fancy}" @toggle="${this.openChanged}">
+        <summary>Biography</summary>
+        <div>
+          <slot>${this.text}</slot>
+        </div>
+      </details>
       </div>  
       `;
+  }
+  // put this anywhere on the MyCard class; just above render() is probably good
+  openChanged(e) {
+    console.log(e.newState);
+    if (e.newState === "open") {
+      this.fancy = true;
+    }
+    else {
+      this.fancy = false;
+    }
   }
 
   static get properties() {
     return {
-      title: { type: String },
-      image: { type: String }, 
-      description: { type: String },
+      title: {type: String },
+      image: {type: String }, 
+      description: {type: String },
+      buttonTitile: {type: String, sttribute: "button-title "},
+      fancy: {type: Boolean, reflect: true}
     };
   }
 }
